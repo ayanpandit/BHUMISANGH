@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BhumiSangh-Home</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-color: #2E7D32;
+            --secondary-color: #4CAF50;
+            --accent-color: #FFA000;
+            --text-color: #333;
+            --bg-light: #F5F5F5;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-color);
+        }
+
+        .navbar {
+            background-color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .hero {
+            height: 100vh;
+            background-color: #4CAF50;
+            background-image: url('https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: overlay;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            padding: 1rem;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .search-bar {
+            background: white;
+            padding: 1rem;
+            border-radius: 50px;
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-bar input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .search-bar button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .search-bar button:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Enhanced Search Results Styling */
+        .search-results {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            display: none;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .plant-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .plant-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .plant-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .plant-details {
+            padding: 1.5rem;
+        }
+
+        .plant-info {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .info-card {
+            background: var(--bg-light);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .info-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .map-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #worldMap {
+            height: 500px;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--primary-color);
+        }
+
+        .error-message {
+            background: #fde7e7;
+            color: #d32f2f;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .features {
+            padding: 4rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .features h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-35px);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+
+        }
+
+        .feature-card h3 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        /* Footer Styling */
+        .footer {
+            background-color: #2E7D32;
+            color: white;
+            padding: 40px 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-logo h3 {
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        .footer-links ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #4CAF50;
+        }
+
+        .footer-social a {
+            text-decoration: none;
+            color: white;
+            font-size: 1.2rem;
+            margin: 0 15px;
+            transition: color 0.3s;
+        }
+
+        .footer-social a:hover {
+            color: #4CAF50;
+        }
+
+        .footer-bottom {
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom p {
+            margin: 0;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .footer-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-links ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .footer-social {
+                margin-top: 20px;
+            }
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .footer-social:hover {
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            transform: scale(1.2);
+        }
+
+        .footer-social:active {
+            transition: transform 0.3s ease;
+            transform: scale(0.2);
+        }
+
+
+
+        /* Existing features section styles remain the same */
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">🌿BhumiSangh</div>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="community.html">Community</a>
+                <a href="Shop.html">Shop</a>
+                <a href="login.html">Login</a>
+
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero" id="heroSection">
+        <div class="hero-content">
+            <h1>Welcome to BhumiSangh</h1>
+            <p>Explore the beauty of plants, share your journey, and connect with fellow nature lovers</p>
+            <div class="search-bar">
+                <input type="text" id="plantSearch" placeholder="Search for plants...">
+                <button id="searchButton">Search</button>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="search-results" id="searchResults">
+        <div id="errorMessage" class="error-message" style="display: none;"></div>
+        <div class="result-grid">
+            <div class="plant-card">
+                <img id="plantImage" class="plant-image" src="" alt="Plant image">
+                <div class="plant-details" id="plantInfo"></div>
+            </div>
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3>🌡️ Climate Conditions</h3>
+                    <div id="climateInfo"></div>
+                </div>
+                <div class="info-card">
+                    <h3>🌱 Soil Requirements</h3>
+                    <div id="soilInfo"></div>
+                </div>
+                <div class="info-card">
+                    <h3>💧 Watering Needs</h3>
+                    <div id="wateringInfo"></div>
+                </div>
+                <div class="info-card">
+                    <h3>☀️ Light Requirements</h3>
+                    <div id="lightInfo"></div>
+                </div>
+            </div>
+        </div>
+        <div class="map-container">
+            <h2>Global Distribution</h2>
+            <div id="worldMap"></div>
+        </div>
+    </section>
+    <section class="features" id=features>
+        <h2>Why Choose BhumiSangh ?</h2>
+        <div class="feature-grid">
+            <div class="feature-card" id="Plant_Identification">
+                <div class="feature-icon">🌱</div>
+                <h3>Plant Identification</h3>
+                <p>Instantly identify any plant using our advanced AI technology.</p>
+            </div>
+            <div class="feature-card" id="Trade_Hub">
+                <div class="feature-icon">🛒</div>
+                <h3>Trade Hub</h3>
+                <p>Buy & Sell with Ease – Your Trusted Marketplace for Seamless Deals!</p>
+            </div>
+            <div class="feature-card" id="disease_dection">
+                <div class="feature-icon">🔍</div>
+                <h3>Disease Detection</h3>
+                <p>Instantly identify any plant Disease using our advanced AI technology.</p>
+            </div>
+            <div class="feature-card" id="Community">
+                <div class="feature-icon">👥</div>
+                <h3>Community</h3>
+                <p>Join a thriving community of plant enthusiasts and experts.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <h3>🌿 BhumiSangh</h3>
+            </div>
+            <div class="footer-links">
+                <ul>
+                    <li><a href="About_us.html">About Us</a></li>
+                    <li><a href="Contact.html">Contact</a></li>
+                    <li><a href="Privacy_Policy.html">Privacy Policy</a></li>
+                    <li><a href="Terms_of_service.html">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div class="footer-social">
+
+                <a href="https://www.linkedin.com/in/ayan-pandey-b66067296?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+                    target="_blank"><img src="https://cdn-icons-png.flaticon.com/128/4494/4494497.png" alt="LinkedIn"
+                        width="30" height="30" />
+                </a></a>
+                <a href="https://github.com/ayanpandit" target="_blank"><img
+                        src="https://img.icons8.com/?size=100&id=12599&format=png&color=000000" alt="GitHub" width="30"
+                        height="30" /></a>
+                <a href="https://www.instagram.com/ayanpandit_31?igsh=NWkyMzFrYTkxbTN5" target="_blank">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/1200px-Instagram_logo_2022.svg.png"
+                        alt="Instagram" width="30" height="30" />
+                </a>
+
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 BhumiSangh. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+
+    <!-- Rest of your existing sections... -->
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Select the feature card and the target section
+        const featureCard1 = document.getElementById('Plant_Identification');
+        const heroSection = document.getElementById('heroSection');
+
+        // Add click event listener to the feature card
+        featureCard1.addEventListener('click', () => {
+            // Scroll to the hero section
+            heroSection.scrollIntoView({ behavior: 'smooth' });
+        });
+        // Select the feature card
+        const featureCard2 = document.getElementById('Trade_Hub');
+
+        // Add a click event listener
+        featureCard2.addEventListener('click', () => {
+            // Navigate to the target HTML page
+            window.location.href = 'Shop.html';
+        });
+        const featureCard3 = document.getElementById('Community');
+
+        // Add a click event listener
+        featureCard3.addEventListener('click', () => {
+            // Navigate to the target HTML page
+            window.location.href = 'Community.html';
+        });
+        const featureCard4 = document.getElementById('disease_dection');
+        // Add a click event listener
+        featureCard4.addEventListener('click', () => {
+            // Navigate to the target HTML page
+            window.location.href = 'ai.html';
+        });
+
+        async function searchPlant(plantName) {
+            const searchResults = document.getElementById('searchResults');
+            const errorMessage = document.getElementById('errorMessage');
+
+            try {
+                searchResults.style.display = 'block';
+                errorMessage.style.display = 'none';
+
+                // Wikipedia API call
+                const searchApi = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(plantName)}+plant&format=json&origin=*`;
+                const searchResponse = await fetch(searchApi);
+                const searchData = await searchResponse.json();
+
+                if (searchData.query.search.length === 0) {
+                    throw new Error('No plant information found');
+                }
+
+                const pageTitle = searchData.query.search[0].title;
+                const contentApi = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(pageTitle)}&prop=extracts|pageimages&exintro=1&format=json&pithumbsize=800&origin=*`;
+                const contentResponse = await fetch(contentApi);
+                const contentData = await contentResponse.json();
+
+                const page = Object.values(contentData.query.pages)[0];
+
+                // Update plant image and info
+                if (page.thumbnail) {
+                    document.getElementById('plantImage').src = page.thumbnail.source;
+                }
+                document.getElementById('plantInfo').innerHTML = page.extract || 'No detailed information available.';
+
+                // Generate plant details using Gemini API
+                await generatePlantDetails(plantName);
+
+                // Scroll to results
+                searchResults.scrollIntoView({ behavior: 'smooth' });
+            } catch (error) {
+                errorMessage.textContent = `Error: ${error.message || 'Failed to fetch plant information'}`;
+                errorMessage.style.display = 'block';
+                console.error('Error:', error);
+            }
+        }
+
+        async function generatePlantDetails(plantName) {
+            try {
+                const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyDar5vdr3m9dAp_CEvvV2-WFMLwwGlaUkk', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: `Provide comprehensive, scientifically accurate details for ${plantName} with precise information:
+    
+    1. TAXONOMY:
+    - Scientific name
+    - Family
+    - Genus
+    
+    2. CLIMATE REQUIREMENTS:
+    - Optimal temperature range (day/night)
+    - Minimum and maximum temperature tolerance
+    - Ideal humidity levels
+    - Hardiness zones
+    
+    3. SOIL SPECIFICATIONS:
+    - Ideal soil composition
+    - pH range
+    - Drainage requirements
+    - Organic matter preferences
+    
+    4. LIGHT REQUIREMENTS:
+    - Hours of direct/indirect sunlight needed
+    - Light intensity preferences
+    - Shade tolerance
+    - Morning vs afternoon sun requirements
+    
+    5. WATERING NEEDS:
+    - Frequency of watering
+    - Water quantity
+    - Drought tolerance
+    - Signs of overwatering/underwatering
+    
+    6. GEOGRAPHICAL DISTRIBUTION:
+    - Native continents
+    - Specific countries/regions of origin
+    - Natural habitat details
+    - Current global cultivation areas
+    
+    Provide detailed, precise, and scientifically verifiable information.`
+                            }]
+                        }]
+                    })
+                });
+
+                const geminiData = await response.json();
+                const details = geminiData.candidates[0].content.parts[0].text;
+
+                // Parse the details with improved regex
+                const parseSection = (sectionName, details) => {
+                    const regex = new RegExp(`${sectionName}:(.*?)(?=\\d+\\.|$)`, 's');
+                    const match = details.match(regex);
+                    return match ? match[1].trim().split('\n').map(line => line.trim()).filter(line => line) : [];
+                };
+
+                // Extract detailed sections
+                const taxonomyDetails = parseSection('1. TAXONOMY', details);
+                const climateDetails = parseSection('2. CLIMATE REQUIREMENTS', details);
+                const soilDetails = parseSection('3. SOIL SPECIFICATIONS', details);
+                const lightDetails = parseSection('4. LIGHT REQUIREMENTS', details);
+                const wateringDetails = parseSection('5. WATERING NEEDS', details);
+                const distributionDetails = parseSection('6. GEOGRAPHICAL DISTRIBUTION', details);
+
+                // Update UI elements with structured information
+                document.getElementById('climateInfo').innerHTML =
+                    `<ul>${climateDetails.map(detail => `<li>${detail}</li>`).join('')}</ul>`;
+
+                document.getElementById('soilInfo').innerHTML =
+                    `<ul>${soilDetails.map(detail => `<li>${detail}</li>`).join('')}</ul>`;
+
+                document.getElementById('wateringInfo').innerHTML =
+                    `<ul>${wateringDetails.map(detail => `<li>${detail}</li>`).join('')}</ul>`;
+
+                document.getElementById('lightInfo').innerHTML =
+                    `<ul>${lightDetails.map(detail => `<li>${detail}</li>`).join('')}</ul>`;
+
+                // Advanced map initialization with distribution
+                initializeWorldMap(plantName, distributionDetails);
+
+            } catch (error) {
+                console.error('Error fetching plant details:', error);
+            }
+        }
+
+        function initializeWorldMap(plantName, distributionDetails) {
+            const map = L.map('worldMap').setView([20, 0], 2);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Comprehensive region mapping
+            const detailedRegionCoordinates = {
+                'North America': [
+                    { name: 'United States', lat: 37.0902, lng: -95.7129 },
+                    { name: 'Canada', lat: 56.1304, lng: -106.3468 },
+                    { name: 'Mexico', lat: 23.6345, lng: -102.5528 }
+                ],
+                'South America': [
+                    { name: 'Brazil', lat: -14.2350, lng: -51.9253 },
+                    { name: 'Argentina', lat: -38.4161, lng: -63.6167 },
+                    { name: 'Peru', lat: -9.1900, lng: -75.0152 }
+                ],
+                'Europe': [
+                    { name: 'United Kingdom', lat: 55.3781, lng: -3.4360 },
+                    { name: 'France', lat: 46.2276, lng: 2.2137 },
+                    { name: 'Germany', lat: 51.1657, lng: 10.4515 }
+                ],
+                'Asia': [
+                    { name: 'China', lat: 35.8617, lng: 104.1954 },
+                    { name: 'India', lat: 20.5937, lng: 78.9629 },
+                    { name: 'Japan', lat: 36.2048, lng: 138.2529 }
+                ],
+                'Africa': [
+                    { name: 'South Africa', lat: -30.5595, lng: 22.9375 },
+                    { name: 'Kenya', lat: -0.0236, lng: 37.9062 },
+                    { name: 'Egypt', lat: 26.8206, lng: 30.8025 }
+                ],
+                'Australia': [
+                    { name: 'Australia', lat: -25.2744, lng: 133.7751 }
+                ]
+            };
+
+            // Find matching regions based on distribution details
+            const matchedRegions = [];
+
+            Object.entries(detailedRegionCoordinates).forEach(([continent, countries]) => {
+                const matchingCountries = countries.filter(country =>
+                    distributionDetails.some(detail =>
+                        detail.toLowerCase().includes(country.name.toLowerCase())
+                    )
+                );
+
+                if (matchingCountries.length > 0) {
+                    matchedRegions.push(...matchingCountries);
+                }
+            });
+
+            // If no specific regions found, use a global approach
+            if (matchedRegions.length === 0) {
+                // Use more generic continent markers
+                Object.values(detailedRegionCoordinates).forEach(regions => {
+                    regions.slice(0, 1).forEach(region => {
+                        matchedRegions.push(region);
+                    });
+                });
+            }
+
+            // Visualize matched regions
+            matchedRegions.forEach(region => {
+                L.marker([region.lat, region.lng])
+                    .addTo(map)
+                    .bindPopup(`${plantName} distribution in ${region.name}`)
+                    .openPopup();
+            });
+        }
+
+        // Existing event listeners remain the same
+        document.getElementById('searchButton').addEventListener('click', () => {
+            const searchTerm = document.getElementById('plantSearch').value.trim();
+            if (searchTerm) {
+                searchPlant(searchTerm);
+            } else {
+                alert('Please enter a plant name');
+            }
+        });
+
+        document.getElementById('plantSearch').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const searchTerm = e.target.value.trim();
+                if (searchTerm) {
+                    searchPlant(searchTerm);
+                } else {
+                    alert('Please enter a plant name');
+                }
+            }
+        });
+    </script>

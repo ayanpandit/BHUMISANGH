@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BhumiSangh - Plant Marketplace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Previous CSS remains the same */
+        :root {
+            --primary-green: #2ecc71;
+            --secondary-green: #27ae60;
+            --dark-green: #1e8449;
+            --light-background: #f0f4f0;
+            --text-color: #2c3e50;
+            --card-background: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light-background);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-color: #2E7D32;
+            --secondary-color: #4CAF50;
+            --accent-color: #FFA000;
+            --text-color: #333;
+            --bg-light: #F5F5F5;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-color);
+        }
+
+        .navbar {
+            background-color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+
+        .home-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 90px;
+            gap: 30px;
+        }
+
+        .sidebar {
+            width: 300px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .add-plant-section {
+            background-color: var(--light-background);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .add-plant-section h2 {
+            color: var(--dark-green);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .add-plant-btn {
+            background-color: var(--primary-green);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .add-plant-btn:hover {
+            background-color: var(--secondary-green);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .products-section {
+            flex-grow: 1;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .product-card {
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+
+
+
+        .product-card:hover img {
+            transform: scale(1.05);
+            transform-origin: center;
+        }
+
+
+        .product-details {
+            padding: 20px;
+        }
+
+        .product-details h3 {
+            color: var(--dark-green);
+            margin-bottom: 10px;
+            font-size: 1.4em;
+        }
+
+        .product-price {
+            font-weight: 600;
+            color: var(--primary-green);
+            font-size: 1.3em;
+            margin: 10px 0;
+        }
+
+        .product-location {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #666;
+            margin: 8px 0;
+        }
+
+        .contact-seller-btn {
+            width: 100%;
+            background-color: var(--primary-green);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 25px;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .contact-seller-btn:hover {
+            background-color: var(--secondary-green);
+            transform: translateY(-2px);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-container {
+            background: white;
+            width: 500px;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: var(--dark-green);
+        }
+
+        .modal-form input,
+        .modal-form textarea,
+        .modal-form select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        .modal-form input:focus,
+        .modal-form textarea:focus,
+        .modal-form select:focus {
+            outline: none;
+            border-color: var(--primary-green);
+        }
+
+        .modal-form button {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary-green);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .modal-form button:hover {
+            background-color: var(--secondary-green);
+            transform: translateY(-2px);
+        }
+
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 500px;
+        }
+
+        .chat-header {
+            padding: 15px;
+            background-color: var(--primary-green);
+            color: white;
+            border-radius: 10px 10px 0 0;
+        }
+
+        #chat-messages {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 15px;
+            max-width: 80%;
+        }
+
+        .message.sent {
+            background-color: var(--primary-green);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.received {
+            background-color: white;
+            border-bottom-left-radius: 5px;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 10px;
+            padding: 15px;
+            background-color: white;
+            border-top: 1px solid #ddd;
+        }
+
+        #chat-input {
+            flex-grow: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            transition: border-color 0.3s ease;
+        }
+
+        #chat-input:focus {
+            outline: none;
+            border-color: var(--primary-green);
+        }
+
+        #send-message {
+            background-color: var(--primary-green);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #send-message:hover {
+            background-color: var(--secondary-green);
+            transform: translateY(-2px);
+        }
+
+        .image-preview {
+            width: 100%;
+            height: 200px;
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .filters {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background-color: white;
+        }
+
+        @media (max-width: 768px) {
+            .home-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+
+            .modal-container {
+                width: 90%;
+                margin: 20px;
+            }
+        }
+
+
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+            z-index: 10;
+        }
+
+        .delete-btn:hover {
+            background-color: #cc0000;
+        }
+
+
+
+
+        /* footer style */
+        .footer {
+            background-color: #2E7D32;
+            color: white;
+            padding: 40px 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-logo h3 {
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        .footer-links ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #4CAF50;
+        }
+
+        .footer-social a {
+            text-decoration: none;
+            color: white;
+            font-size: 1.2rem;
+            margin: 0 15px;
+            transition: color 0.3s;
+        }
+
+        .footer-social a:hover {
+            color: #4CAF50;
+        }
+
+        .footer-bottom {
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom p {
+            margin: 0;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .footer-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-links ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .footer-social {
+                margin-top: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .footer-container {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .footer-links ul {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+        /* No changes needed in the CSS */
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">🌿BhumiSangh</div>
+            <div class="nav-links">
+                <a href="Home.html">Home</a>
+                <a href="Home.html#features">Features</a>
+                <a href="Community.html">Community</a>
+                <a href="login.html">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="home-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="add-plant-section">
+                <h2>Sell Your Product</h2>
+                <p>List your unique Product!</p>
+                <button class="add-plant-btn" onclick="app.openAddPlantModal()">
+                    ➕ Add Your Product
+                </button>
+            </div>
+        </div>
+
+        <!-- Products Section -->
+        <div class="products-section">
+            <h2>Available Products</h2>
+            <div class="filters">
+                <div class="filter-group">
+                    <select id="country-filter" onchange="app.filterProducts()">
+                        <option value="">All Countries</option>
+                        <option value="India">India</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <select id="price-filter" onchange="app.filterProducts()">
+                        <option value="">All Prices</option>
+                        <option value="0-1000">₹0 - ₹1,000</option>
+                        <option value="1000-5000">₹1,000 - ₹5,000</option>
+                        <option value="5000+">₹5,000+</option>
+                    </select>
+                </div>
+            </div>
+            <div class="products-grid" id="products-grid">
+                <!-- Products will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Plant Modal -->
+    <div id="add-plant-modal" class="modal">
+        <div class="modal-container">
+            <button class="modal-close" onclick="app.closeAddPlantModal()">×</button>
+            <h2>List Your Product</h2>
+            <form class="modal-form" id="add-plant-form">
+                <div class="image-preview" id="image-preview">
+                    <span>Preview Image</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="plant-image">Product Image</label>
+                    <input type="file" id="plant-image" accept="image/*" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="plant-name">Product Name</label>
+                    <input type="text" id="plant-name" placeholder="e.g., Monstera Deliciosa" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="plant-description">Description</label>
+                    <textarea id="plant-description" placeholder="Describe your plant..." rows="4" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="plant-price">Price (₹)</label>
+                    <input type="number" id="plant-price" placeholder="999" step="1" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="country">Country</label>
+                    <select id="country" required>
+                        <option value="">Select Country</option>
+                        <option value="India">India</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="state">State</label>
+                    <select id="state" required>
+                        <option value="">Select State</option>
+                        <option value="Andhra Pradesh">Andhra Pradesh</option>
+                        <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                        <option value="Assam">Assam</option>
+                        <option value="Bihar">Bihar</option>
+                        <option value="Chhattisgarh">Chhattisgarh</option>
+                        <option value="Goa">Goa</option>
+                        <option value="Gujarat">Gujarat</option>
+                        <option value="Haryana">Haryana</option>
+                        <option value="Himachal Pradesh">Himachal Pradesh</option>
+                        <option value="Jharkhand">Jharkhand</option>
+                        <option value="Karnataka">Karnataka</option>
+                        <option value="Kerala">Kerala</option>
+                        <option value="Madhya Pradesh">Madhya Pradesh</option>
+                        <option value="Maharashtra">Maharashtra</option>
+                        <option value="Manipur">Manipur</option>
+                        <option value="Meghalaya">Meghalaya</option>
+                        <option value="Mizoram">Mizoram</option>
+                        <option value="Nagaland">Nagaland</option>
+                        <option value="Odisha">Odisha</option>
+                        <option value="Punjab">Punjab</option>
+                        <option value="Rajasthan">Rajasthan</option>
+                        <option value="Sikkim">Sikkim</option>
+                        <option value="Tamil Nadu">Tamil Nadu</option>
+                        <option value="Telangana">Telangana</option>
+                        <option value="Tripura">Tripura</option>
+                        <option value="Uttar Pradesh">Uttar Pradesh</option>
+                        <option value="Uttarakhand">Uttarakhand</option>
+                        <option value="West Bengal">West Bengal</option>
+                        <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                        <option value="Chandigarh">Chandigarh</option>
+                        <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                        <option value="Ladakh">Ladakh</option>
+                        <option value="Lakshadweep">Lakshadweep</option>
+                        <option value="Puducherry">Puducherry</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="city">City</label>
+                    <input type="text" id="city" placeholder="Your City" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="seller-name">Your Name</label>
+                    <input type="text" id="seller-name" placeholder="Your Full Name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="seller-email">Your Email</label>
+                    <input type="email" id="seller-email" placeholder="your.email@example.com" required>
+                </div>
+
+                <button type="submit">List Your Product</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Rest of the HTML remains the same -->
+     <!-- Chat Modal -->
+    <div id="chat-modal" class="modal">
+        <div class="modal-container">
+            <button class="modal-close" onclick="app.closeChatModal()">×</button>
+            <div class="chat-container">
+                <div class="chat-header">
+                    <h3>Chat with Seller</h3>
+                    <p id="chat-seller-info"></p>
+                </div>
+                <div id="chat-messages"></div>
+                <div class="chat-input-container">
+                    <input type="text" id="chat-input" placeholder="Type your message..."
+                        onkeypress="if(event.key === 'Enter') app.sendMessage()">
+                    <button id="send-message" onclick="app.sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer-->
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <h3>🌿 BhumiSangh</h3>
+            </div>
+            <div class="footer-links">
+                <ul>
+                    <li><a href="About_us.html">About Us</a></li>
+                    <li><a href="Contact.html">Contact</a></li>
+                    <li><a href="Privacy_Policy.html">Privacy Policy</a></li>
+                    <li><a href="Terms_of_service.html">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div class="footer-social">
+                <a href="https://www.linkedin.com/in/ayan-pandey-b66067296?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+                    target="_blank"><img src="https://cdn-icons-png.flaticon.com/128/4494/4494497.png" alt="LinkedIn"
+                        width="30" height="30" />
+                </a></a>
+                <a href="https://github.com/ayanpandit" target="_blank"><img
+                        src="https://img.icons8.com/?size=100&id=12599&format=png&color=000000" alt="GitHub" width="30"
+                        height="30" /></a>
+                <a href="https://www.instagram.com/ayanpandit_31?igsh=NWkyMzFrYTkxbTN5" target="_blank">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/1200px-Instagram_logo_2022.svg.png"
+                        alt="Instagram" width="30" height="30" />
+                </a>
+
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 BhumiSangh. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Footer and other sections are unchanged -->
+
+    <script>
+        class PlantMarketplace {
+            constructor() {
+                this.productsGrid = document.getElementById('products-grid');
+                this.addPlantForm = document.getElementById('add-plant-form');
+                this.addPlantModal = document.getElementById('add-plant-modal');
+                this.chatModal = document.getElementById('chat-modal');
+                this.chatMessages = document.getElementById('chat-messages');
+                this.chatInput = document.getElementById('chat-input');
+                this.currentProduct = null;
+                this.imagePreview = document.getElementById('image-preview');
+
+                this.initEventListeners();
+                this.loadProducts();
+            }
+
+            // Most of the methods remain the same
+            initEventListeners() {
+                this.addPlantForm.addEventListener('submit', (e) => this.addPlant(e));
+
+                // Image preview
+                document.getElementById('plant-image').addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            this.imagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+
+                // Close modals when clicking outside
+                window.onclick = (e) => {
+                    if (e.target.classList.contains('modal')) {
+                        e.target.style.display = 'none';
+                    }
+                };
+
+                // Chat input enter key handler
+                this.chatInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.sendMessage();
+                    }
+                });
+            }
+
+            addPlant(e) {
+                e.preventDefault();
+
+                const plantName = document.getElementById('plant-name').value;
+                const plantDescription = document.getElementById('plant-description').value;
+                const plantPrice = document.getElementById('plant-price').value;
+                const plantImage = document.getElementById('plant-image').files[0];
+                const country = document.getElementById('country').value;
+                const state = document.getElementById('state').value;
+                const city = document.getElementById('city').value;
+                const sellerName = document.getElementById('seller-name').value;
+                const sellerEmail = document.getElementById('seller-email').value;
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const plant = {
+                        id: Date.now(),
+                        name: plantName,
+                        description: plantDescription,
+                        price: parseFloat(plantPrice),
+                        image: event.target.result,
+                        country: country,
+                        state: state,
+                        city: city,
+                        sellerName: sellerName,
+                        sellerEmail: sellerEmail,
+                        dateAdded: new Date().toISOString()
+                    };
+
+                    let plants = JSON.parse(localStorage.getItem('marketplace-plants')) || [];
+                    plants.push(plant);
+                    localStorage.setItem('marketplace-plants', JSON.stringify(plants));
+
+                    this.loadProducts();
+                    this.closeAddPlantModal();
+                    this.addPlantForm.reset();
+                    this.imagePreview.innerHTML = '<span>Preview Image</span>';
+                };
+                reader.readAsDataURL(plantImage);
+            }
+            // Key changes will be in predefinedPlants and price handling
+
+            loadProducts() {
+                const predefinedPlants = [
+                    {
+                        id: 1,
+                        name: "Monstera Deliciosa",
+                        price: 4599,
+                        image: "monstera deliciosa.png",
+                        description: "Large, beautiful tropical plant with unique split leaves",
+                        country: "India",
+                        state: "Maharashtra",
+                        city: "Mumbai",
+                        sellerName: "Green Thumb Nursery",
+                        sellerEmail: "contact@greenthumb.com"
+                    },
+                    {
+                        id: 2,
+                        name: "Snake Plant",
+                        price: 2999,
+                        image: "snake plant.png",
+                        description: "Low maintenance plant perfect for indoor spaces",
+                        country: "India",
+                        state: "Karnataka",
+                        city: "Bengaluru",
+                        sellerName: "Urban Jungle",
+                        sellerEmail: "sales@urbanjungle.com"
+                    }
+                ];
+
+                const userPlants = JSON.parse(localStorage.getItem('marketplace-plants')) || [];
+                let allPlants = [...predefinedPlants, ...userPlants];
+
+                // Apply filters
+                const countryFilter = document.getElementById('country-filter').value;
+                const priceFilter = document.getElementById('price-filter').value;
+
+                if (countryFilter) {
+                    allPlants = allPlants.filter(plant => plant.country === countryFilter);
+                }
+
+                if (priceFilter) {
+                    const [min, max] = priceFilter.split('-').map(val => val === '+' ? Infinity : Number(val));
+                    allPlants = allPlants.filter(plant => plant.price >= min && (max === Infinity || plant.price <= max));
+                }
+
+                this.productsGrid.innerHTML = '';
+                allPlants.forEach(plant => {
+                    const productCard = document.createElement('div');
+                    productCard.classList.add('product-card');
+                    productCard.innerHTML = `
+                        ${plant.id ? `<button class="delete-btn" onclick="app.deletePlant(${plant.id})">×</button>` : ''}
+                        <img src="${plant.image}" alt="${plant.name}">
+                        <div class="product-details">
+                            <h3>${plant.name}</h3>
+                            <p>${plant.description}</p>
+                            <p class="product-price">₹${parseFloat(plant.price).toFixed(2)}</p>
+                            <p class="product-location">📍 ${plant.city}, ${plant.state}, ${plant.country}</p>
+                            <button class="contact-seller-btn" onclick='app.openChatModal(${JSON.stringify(plant).replace(/"/g, "&quot;")})'>
+                                Contact Seller
+                            </button>
+                        </div>
+                    `;
+                    this.productsGrid.appendChild(productCard);
+                });
+            }
+
+            // Rest of the class implementation remains the same
+            filterProducts() {
+                this.loadProducts();
+            }
+
+            openAddPlantModal() {
+                this.addPlantModal.style.display = 'flex';
+            }
+
+            closeAddPlantModal() {
+                this.addPlantModal.style.display = 'none';
+                this.addPlantForm.reset();
+                this.imagePreview.innerHTML = '<span>Preview Image</span>';
+            }
+
+            openChatModal(plant) {
+                this.currentProduct = plant;
+                this.chatModal.style.display = 'flex';
+                document.getElementById('chat-seller-info').textContent =
+                    `Chatting about: ${plant.name} with ${plant.sellerName}`;
+                this.chatMessages.innerHTML = `
+            <div class="message received">
+                <strong>${plant.sellerName}</strong><br>
+                Hello! I'm interested in answering any questions you have about ${plant.name}.
+            </div>
+        `;
+            }
+
+            closeChatModal() {
+                this.chatModal.style.display = 'none';
+                this.currentProduct = null;
+                this.chatInput.value = '';
+            }
+
+            sendMessage() {
+                const message = this.chatInput.value.trim();
+                if (message && this.currentProduct) {
+                    // Add user message
+                    this.chatMessages.innerHTML += `
+                <div class="message sent">
+                    <strong>You:</strong><br>
+                    ${message}
+                </div>
+            `;
+
+                    // Simulate seller response
+                    setTimeout(() => {
+                        this.chatMessages.innerHTML += `
+                    <div class="message received">
+                        <strong>${this.currentProduct.sellerName}:</strong><br>
+                        Thank you for your interest! I'll get back to you soon via email at ${this.currentProduct.sellerEmail}.
+                    </div>
+                `;
+                        this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+                    }, 1000);
+
+                    this.chatInput.value = '';
+                    this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+                }
+            }
+
+            deletePlant(id) {
+                let plants = JSON.parse(localStorage.getItem('marketplace-plants')) || [];
+                plants = plants.filter(plant => plant.id !== id);
+                localStorage.setItem('marketplace-plants', JSON.stringify(plants));
+                this.loadProducts();
+            }
+        }
+
+        
+
+        const app = new PlantMarketplace();
+    </script>
+</body>
+</html>

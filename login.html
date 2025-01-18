@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login/Plant/Care</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: url('dry.jpg') no-repeat center center fixed;
+      background-size: cover;
+      position: relative;
+      overflow: hidden;
+      transition: background-image 0.3s ease;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(12px);
+      z-index: 1;
+    }
+
+    .login-container {
+      display: flex;
+      width: 100%;
+      max-width: 600px;
+      height: 400px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+      z-index: 2;
+      flex-wrap: wrap;
+    }
+
+    .left-section {
+      width: 40%;
+      background: url('sad.jpg') no-repeat center center;
+      background-size: cover;
+      transition: background-image 0.3s ease;
+    }
+
+    .right-section {
+      width: 60%;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .right-section h2 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .right-section p {
+      font-size: 14px;
+      color: #666;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    /* Input fields */
+    .input-field {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      color: white;
+      background-color: #00c853;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .login-btn:hover {
+      background-color: #009e47;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 14px;
+      color: #555;
+      margin-top: 20px;
+    }
+
+    .footer a {
+      color: #00c853;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* Media Queries for Responsiveness */
+    @media (max-width: 768px) {
+      .login-container {
+        flex-direction: column;
+        height: auto;
+      }
+
+      .left-section {
+        width: 100%;
+        height: 200px;
+      }
+
+      .right-section {
+        width: 100%;
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="login-container">
+
+    <div class="left-section" id="left-section"></div>
+
+    <div class="right-section" id="form-section">
+      <h2 id="form-title">Login to 🌿 BhumiSangh</h2>
+      <p id="form-description">Sign in to continue to your account</p>
+      <!-- Input fields for name, email, password -->
+      <input type="text" class="input-field" placeholder="Name" id="name">
+      <input type="email" class="input-field" placeholder="Email address" id="email">
+      <input type="password" class="input-field" placeholder="Password" id="password">
+      <button class="login-btn" id="submit-btn">Sign In</button>
+
+      <div class="footer">
+        <p>Not a member yet? <a id="signup-link">Sign Up</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const submitButton = document.getElementById('submit-btn');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const nameInput = document.getElementById('name'); // Get name input field
+    const formTitle = document.getElementById('form-title');
+    const formDescription = document.getElementById('form-description');
+    const signupLink = document.getElementById('signup-link');
+
+    const leftSection = document.getElementById('left-section');
+
+    const defaultBackground = 'dry.jpg';
+    const defaultLeftImage = 'sad.jpg';
+
+    const focusedBackground = 'greenery.jpg';
+    const focusedLeftImage = 'happy.jpg';
+
+    function applyFocusImages() {
+      document.body.style.backgroundImage = `url('${focusedBackground}')`;
+      leftSection.style.backgroundImage = `url('${focusedLeftImage}')`;
+    }
+
+    function applyDefaultImages() {
+      document.body.style.backgroundImage = `url('${defaultBackground}')`;
+      leftSection.style.backgroundImage = `url('${defaultLeftImage}')`;
+    }
+
+    function showSignUpForm() {
+      formTitle.textContent = 'Create an Account';
+      formDescription.textContent = 'Sign up to start growing your plants!';
+      emailInput.value = '';
+      passwordInput.value = '';
+      submitButton.textContent = 'Sign Up';
+    }
+
+    function handleFormSubmit() {
+      const name = nameInput.value; // Get name value
+      const email = emailInput.value;
+      const password = passwordInput.value;
+
+      if (submitButton.textContent === 'Sign In') {
+
+        const storedPassword = localStorage.getItem(email);
+        if (storedPassword && storedPassword === password) {
+          alert(`Login successful! Welcome, ${name}`); // Show name in success message
+          window.location.href = 'Home.html'; // Redirect to home page
+        } else {
+          alert('Invalid email or password.');
+        }
+      } else {
+        localStorage.setItem(email, password);
+        localStorage.setItem('name', name); // Store name in localStorage
+        alert('Account created successfully! You can now log in.');
+        showLoginForm();
+      }
+    }
+
+    function showLoginForm() {
+      formTitle.textContent = 'Login to PlantCare';
+      formDescription.textContent = 'Sign in to continue to your account';
+      emailInput.value = '';
+      passwordInput.value = '';
+      submitButton.textContent = 'Sign In';
+    }
+
+    emailInput.addEventListener('focus', applyFocusImages);
+    passwordInput.addEventListener('focus', applyFocusImages);
+
+    emailInput.addEventListener('blur', applyDefaultImages);
+    passwordInput.addEventListener('blur', applyDefaultImages);
+
+    signupLink.addEventListener('click', showSignUpForm);
+    submitButton.addEventListener('click', handleFormSubmit);
+  </script>
+</body>
+
+</html>

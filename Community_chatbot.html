@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlantCare Chat</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-color: #2E7D32;
+            --secondary-color: #4CAF50;
+            --accent-color: #FFA000;
+            --text-color: #333;
+            --bg-light: #F5F5F5;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-color);
+        }
+
+        .navbar {
+            background-color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 100px auto 20px;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            min-height: calc(100vh - 300px);
+        }
+
+        .sidebar {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .expert-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .expert-btn {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: none;
+            background: #e8f5e9;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: left;
+            transition: 0.3s;
+        }
+
+        .expert-btn:hover {
+            background: #c8e6c9;
+        }
+
+        .expert-btn.active {
+            background: #4caf50;
+            color: white;
+        }
+
+        .chat-type-btn {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: none;
+            background: #f5f5f5;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .chat-type-btn.active {
+            background: #2196f3;
+            color: white;
+        }
+
+        .chat-container {
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-height: calc(100vh - 160px);
+            margin-bottom: 40px;
+        }
+
+        .chat-header {
+            padding: 20px;
+            background: #4caf50;
+            color: white;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            max-height: calc(100vh - 340px);
+        }
+
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 80%;
+        }
+
+        .message.user {
+            background: #e3f2fd;
+            margin-left: auto;
+        }
+
+        .message.expert {
+            background: #f1f8e9;
+        }
+
+        .message.community {
+            background: #fff3e0;
+        }
+
+        .chat-input {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .clear-chat {
+            padding: 10px 20px;
+            background: #ff5252;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .clear-chat:hover {
+            background: #ff1744;
+        }
+
+        .send-button {
+            padding: 10px 20px;
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .send-button:hover {
+            background: #45a049;
+        }
+
+        .loading {
+            display: inline-block;
+            margin-left: 10px;
+            font-style: italic;
+            color: #666;
+        }
+
+        .user-info {
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 1000;
+            animation: fadeIn 0.3s, fadeOut 0.3s 2.7s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+         /* Footer Styling */
+         .footer {
+            background-color: #2E7D32;
+            color: white;
+            padding: 40px 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-logo h3 {
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        .footer-links ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #4CAF50;
+        }
+
+        .footer-social a {
+            text-decoration: none;
+            color: white;
+            font-size: 1.2rem;
+            margin: 0 15px;
+            transition: color 0.3s;
+        }
+
+        .footer-social a:hover {
+            color: #4CAF50;
+        }
+
+        .footer-bottom {
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom p {
+            margin: 0;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .footer-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-links ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .footer-social {
+                margin-top: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .footer-container {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            .footer-links ul {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">🌿 PlantCare</div>
+            <div class="nav-links">
+                <a href="Home.html">Home</a>
+                <a href="community.html">Back</a>
+                <a href="Shop.html">Shop</a>
+                <a href="login_plant care.html">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="sidebar">
+            <h2>PlantCare Chat</h2>
+            <div class="chat-types">
+                <button class="chat-type-btn active" data-type="expert">Expert Chat</button>
+                <button class="chat-type-btn" data-type="community">Community Chat</button>
+            </div>
+            <div class="expert-list">
+                <button class="expert-btn" data-expert="indoor">Indoor Plant Expert</button>
+                <button class="expert-btn" data-expert="garden">Garden Specialist</button>
+                <button class="expert-btn" data-expert="disease">Plant Disease Expert</button>
+                <button class="expert-btn" data-expert="organic">Organic Farming Expert</button>
+                <button class="expert-btn" data-expert="bonsai">Bonsai Master</button>
+            </div>
+        </div>
+
+        <div class="chat-container">
+            <div class="chat-header">
+                <h2 id="chat-title">Select an Expert or Community Chat</h2>
+                <div class="user-info" id="user-info"></div>
+            </div>
+            <div class="chat-messages" id="chat-messages"></div>
+            <div class="chat-input">
+                <button class="clear-chat" id="clear-chat">Clear Chat</button>
+                <input type="text" id="message-input" placeholder="Type your message...">
+                <button class="send-button" id="send-button">Send</button>
+                <span id="loading" class="loading" style="display: none;">Getting response...</span>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <h3>🌿 BhumiSangh</h3>
+            </div>
+            <div class="footer-links">
+                <ul>
+                    <li><a href="About_us.html">About Us</a></li>
+                    <li><a href="Contact.html">Contact</a></li>
+                    <li><a href="Privacy_Policy.html">Privacy Policy</a></li>
+                    <li><a href="Terms_of_service.html">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div class="footer-social">
+                <a href="https://www.linkedin.com/in/ayan-pandey-b66067296?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+                    target="_blank"><img src="https://cdn-icons-png.flaticon.com/128/4494/4494497.png" alt="LinkedIn"
+                        width="30" height="30" />
+                </a></a>
+                <a href="https://github.com/ayanpandit" target="_blank"><img
+                        src="https://img.icons8.com/?size=100&id=12599&format=png&color=000000" alt="GitHub"
+                        width="30" height="30" /></a>
+                <a href="https://www.instagram.com/ayanpandit_31?igsh=NWkyMzFrYTkxbTN5" target="_blank">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/1200px-Instagram_logo_2022.svg.png"
+                        alt="Instagram" width="30" height="30" />
+                </a>
+
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 BhumiSangh. All Rights Reserved.</p>
+        </div>
+    </footer>
+    <script>
+        // Configuration and Global Variables
+        const GEMINI_API_KEY = 'AIzaSyDar5vdr3m9dAp_CEvvV2-WFMLwwGlaUkk';
+        const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+
+        // DOM Elements
+        const chatMessages = document.getElementById('chat-messages');
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+        const chatTitle = document.getElementById('chat-title');
+        const expertButtons = document.querySelectorAll('.expert-btn');
+        const chatTypeButtons = document.querySelectorAll('.chat-type-btn');
+        const clearChatButton = document.getElementById('clear-chat');
+        const loadingIndicator = document.getElementById('loading');
+        const userInfo = document.getElementById('user-info');
+
+        // State Variables
+        let currentExpert = null;
+        let currentChatType = 'expert';
+        let messageHistory = JSON.parse(localStorage.getItem('chatHistory')) || {};
+        let currentUser = localStorage.getItem('currentUser') || 'Guest';
+
+        // Community Profiles
+        const communityProfiles = [
+            { name: 'GardenGuru', expertise: 'Vegetables' },
+            { name: 'PlantLover', expertise: 'Succulents' },
+            { name: 'GreenThumb', expertise: 'Herbs' },
+            { name: 'FlowerPower', expertise: 'Flowers' },
+            { name: 'BotanyBrain', expertise: 'Indoor Plants' }
+        ];
+
+        // Initialize Chat
+        function initializeChat() {
+            updateUserInfo();
+            setupEventListeners();
+            loadChatHistory();+
+            checkLoginStatus();
+        }
+
+        // Setup Event Listeners
+        function setupEventListeners() {
+            sendButton.addEventListener('click', sendMessage);
+            messageInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendMessage();
+            });
+            clearChatButton.addEventListener('click', clearChat);
+
+            expertButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    expertButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    currentExpert = button.dataset.expert;
+                    updateChatHeader();
+                    loadChatHistory();
+                });
+            });
+
+            chatTypeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    chatTypeButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    currentChatType = button.dataset.type;
+                    updateChatHeader();
+                    loadChatHistory();
+                });
+            });
+        }
+
+        // Update User Info
+        function updateUserInfo() {
+            userInfo.textContent = `Logged in as: ${currentUser}`;
+        }
+
+        // Clear Chat
+        function clearChat() {
+            const chatId = currentChatType === 'expert' ? currentExpert : 'community';
+            messageHistory[chatId] = [];
+            localStorage.setItem('chatHistory', JSON.stringify(messageHistory));
+            loadChatHistory();
+        }
+
+        // Send Message
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message || !validateMessage(message)) return;
+
+            addMessage(message, 'user');
+            messageInput.value = '';
+            loadingIndicator.style.display = 'inline-block';
+
+            try {
+                if (currentChatType === 'expert') {
+                    const response = await getGeminiResponse(message);
+                    addMessage(formatExpertResponse(response), 'expert');
+                } else {
+                    simulateCommunityResponses(message);
+                }
+            } catch (error) {
+                handleError(error);
+            } finally {
+                loadingIndicator.style.display = 'none';
+            }
+        }
+
+        // Get Gemini API Response
+        async function getGeminiResponse(message) {
+            try {
+                const expertContext = currentExpert ? `As a ${currentExpert} plant expert: ` : '';
+                const response = await fetch(`${API_URL}?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: expertContext + message
+                            }]
+                        }]
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('API request failed');
+                }
+
+                const data = await response.json();
+                return data.candidates[0].content.parts[0].text;
+            } catch (error) {
+                return handleGeminiError(error);
+            }
+        }
+
+        // Simulate Community Responses
+        function simulateCommunityResponses(message) {
+            const respondingProfiles = getRandomProfiles(2);
+
+            respondingProfiles.forEach((profile, index) => {
+                setTimeout(() => {
+                    const response = generateCommunityResponse(profile, message);
+                    addMessage(`${profile.name}: ${response}`, 'community');
+                }, getRandomDelay() + (index * 1000));
+            });
+        }
+
+        // Get Random Community Profiles
+        function getRandomProfiles(count) {
+            return communityProfiles
+                .sort(() => 0.5 - Math.random())
+                .slice(0, count);
+        }
+
+        // Generate Community Response
+        function generateCommunityResponse(profile, message) {
+            const responses = [
+                `Based on my experience with ${profile.expertise}, I would suggest...`,
+                `I've dealt with similar issues in my ${profile.expertise} garden...`,
+                `From what I've learned about ${profile.expertise}, you might want to try...`,
+                `In my experience working with ${profile.expertise}, I've found that...`
+            ];
+            return responses[Math.floor(Math.random() * responses.length)];
+        }
+
+
+        // Add Message (continuation)
+        function addMessage(text, type) {
+            const message = document.createElement('div');
+            message.classList.add('message', type);
+
+            if (type === 'user') {
+                text = `${currentUser}: ${text}`;
+            }
+
+            message.textContent = text;
+            chatMessages.appendChild(message);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            const chatId = currentChatType === 'expert' ? currentExpert : 'community';
+            if (!messageHistory[chatId]) {
+                messageHistory[chatId] = [];
+            }
+            messageHistory[chatId].push({ text, type });
+            localStorage.setItem('chatHistory', JSON.stringify(messageHistory));
+        }
+
+        // Load chat history
+        function loadChatHistory() {
+            chatMessages.innerHTML = '';
+            const chatId = currentChatType === 'expert' ? currentExpert : 'community';
+            if (messageHistory[chatId]) {
+                messageHistory[chatId].forEach(msg => {
+                    const message = document.createElement('div');
+                    message.classList.add('message', msg.type);
+                    message.textContent = msg.text;
+                    chatMessages.appendChild(message);
+                });
+            }
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Update chat header
+        function updateChatHeader() {
+            if (currentChatType === 'expert') {
+                const expertName = currentExpert ?
+                    document.querySelector(`[data-expert="${currentExpert}"]`).textContent :
+                    'Select an Expert';
+                chatTitle.textContent = expertName;
+            } else {
+                chatTitle.textContent = 'Community Chat';
+            }
+        }
+
+        // Show notification
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.classList.add('notification');
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Handle errors gracefully
+        function handleError(error) {
+            console.error('Error:', error);
+            showNotification('An error occurred. Please try again.');
+            loadingIndicator.style.display = 'none';
+        }
+
+        // Format expert response
+        function formatExpertResponse(response) {
+            return response.split('\n').map(line => line.trim()).filter(Boolean).join('\n');
+        }
+
+        // Generate a more natural delay
+        function getRandomDelay() {
+            return Math.floor(Math.random() * 1000) + 500; // Random delay between 500-1500ms
+        }
+
+        // Check if user is logged in
+        function checkLoginStatus() {
+            const username = localStorage.getItem('currentUser');
+            if (username) {
+                currentUser = username;
+                updateUserInfo();
+            }
+        }
+
+        // Error handler for Gemini API
+        async function handleGeminiError(error) {
+            console.error('Gemini API Error:', error);
+            showNotification('Error connecting to expert system. Please try again.');
+            return 'I apologize, but I\'m having trouble connecting to the expert system. Please try again in a moment.';
+        }
+
+
+        // Validate message content
+        function validateMessage(message) {
+            if (message.length === 0) {
+                showNotification('Please enter a message');
+                return false;
+            }
+            if (message.length > 500) {
+                showNotification('Message is too long (maximum 500 characters)');
+                return false;
+            }
+            return true;
+        }
+
+        // Clean up old messages periodically
+        function cleanupOldMessages() {
+            const maxMessages = 100;
+            Object.keys(messageHistory).forEach(chatId => {
+                if (messageHistory[chatId].length > maxMessages) {
+                    messageHistory[chatId] = messageHistory[chatId].slice(-maxMessages);
+                }
+            });
+            localStorage.setItem('chatHistory', JSON.stringify(messageHistory));
+        }
+
+        // Handle window focus/blur for activity status
+        window.addEventListener('focus', () => {
+            updateUserInfo();
+        });
+
+        // Run cleanup periodically
+        setInterval(cleanupOldMessages, 1000 * 60 * 60); // Every hour
+
+        // Initialize the application when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeChat();
+        });
+
+
+
+        
+    </script>
+</body>
+
+</html>

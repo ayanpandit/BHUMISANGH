@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - BhumiSangh</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .header {
+            background-color: #2d2d2d;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 1em;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        .contact-form button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+
+        .contact-form button:hover {
+            background-color: #45a049;
+        }
+
+        .contact-details {
+            margin-top: 40px;
+        }
+
+        .contact-details h2 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .contact-details p {
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .footer {
+            background-color: #2d2d2d;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            margin-top: 40px;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #d32f2f;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .cta-button:hover {
+            background-color: #b71c1c;
+        }
+        .cta-button {
+                padding: 8px 15px;
+            }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <h1>Contact Us</h1>
+    </header>
+
+    <div class="container">
+        <h2>Get in Touch</h2>
+        <p>If you have any questions, feedback, or need assistance, feel free to reach out to us. We're here to help!</p>
+
+        <form class="contact-form" action="mailto:your-email@example.com" method="post" enctype="text/plain">
+            <label for="name">Your Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Your Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="message">Your Message:</label>
+            <textarea id="message" name="message" rows="6" required></textarea>
+
+            <button type="submit">Send Message</button>
+        </form>
+
+        <div class="contact-details">
+            <h2>Our Contact Information</h2>
+            <p><strong>Email:</strong> <a href="aayanpandey8528@gmail.com">aayanpandey8528@gmail.com</p>
+            <p><strong>Phone:</strong> 8528585621</p>
+            <p><strong>Address:</strong> ABES Engineering College </p>
+            <p>Boy's hostel DNB LG-03 </p>
+        </div>
+        <a href="Home.html" class="cta-button">Home</a>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 BhumiSangh. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

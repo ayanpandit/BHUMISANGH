@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlantCare Community - Connect with Plant Lovers</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        :root { 
+            --primary-color: #2E7D32; 
+            --secondary-color: #4CAF50; 
+            --accent-color: #FFA000; 
+            --text-color: #333; 
+            --bg-light: #F5F5F5; 
+        }
+        body { background-color: var(--bg-light); color: var(--text-color); }
+        .navbar { background-color: white; padding: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: fixed; width: 100%; top: 0; z-index: 1000; }
+        .nav-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: bold; color: var(--primary-color); }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { text-decoration: none; color: var(--text-color); font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--primary-color); }
+
+        .community-hero {
+            margin-top: 64px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 4rem 1rem;
+            text-align: center;
+        }
+
+        .community-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .community-hero p {
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .forums-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .forum-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .forum-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .forum-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .forum-stats {
+            display: flex;
+            gap: 1rem;
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        .featured-posts {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .post-card {
+            border-bottom: 1px solid #eee;
+            padding: 1rem 0;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .post-card:last-child {
+            border-bottom: none;
+        }
+
+        .post-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .post-content h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .post-meta {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .community-cta {
+            text-align: center;
+            padding: 4rem 1rem;
+            background: var(--primary-color);
+            color: white;
+            margin-top: 3rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: var(--primary-color);
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 1rem;
+            transition: transform 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+        }
+
+         /* Footer Styling */
+         .footer {
+            background-color: #2E7D32;
+            color: white;
+            padding: 40px 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-logo h3 {
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        .footer-links ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #4CAF50;
+        }
+
+        .footer-social a {
+            text-decoration: none;
+            color: white;
+            font-size: 1.2rem;
+            margin: 0 15px;
+            transition: color 0.3s;
+        }
+
+        .footer-social a:hover {
+            color: #4CAF50;
+        }
+
+        .footer-bottom {
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom p {
+            margin: 0;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .footer-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-links ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .footer-social {
+                margin-top: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .footer-container {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            .footer-links ul {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">🌿BhumiSangh</div>
+            <div class="nav-links">
+                <a href="Home.html">Home</a>
+                <a href="Home.html#features">Features</a>
+                <a href="#community.html">Community</a>
+                <a href="Shop.html">Shop</a>
+                <a href="login.html">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="community-hero">
+        <h1>Join Our Growing Community</h1>
+        <p>Connect with plant enthusiasts, share your experiences, and learn from experts in our vibrant community.</p>
+    </section>
+
+    <main class="main-content">
+        <div class="forums-grid">
+            <div class="forum-card">
+                <h3>🌿BhumiSangh Basics</h3>
+                <p>New to 🌿BhumiSangh? Get started with fundamental tips and advice from experienced growers.</p>
+                <div class="forum-stats">
+                    <span>1.2k Topics</span>
+                    <span>•</span>
+                    <span>5.4k Members</span>
+                </div>
+            </div>
+            <div class="forum-card">
+                <h3>🔍 Plant Identification</h3>
+                <p>Help identify mystery plants or share your knowledge to help others.</p>
+                <div class="forum-stats">
+                    <span>856 Topics</span>
+                    <span>•</span>
+                    <span>3.2k Members</span>
+                </div>
+            </div>
+            <div class="forum-card">
+                <h3>🏡 Indoor Gardening</h3>
+                <p>Everything about growing and maintaining indoor plants in any space.</p>
+                <div class="forum-stats">
+                    <span>2.1k Topics</span>
+                    <span>•</span>
+                    <span>7.8k Members</span>
+                </div>
+            </div>
+        </div>
+
+        <section class="featured-posts">
+            <h2>Recent Discussions</h2>
+            <div class="post-card">
+                <div class="post-avatar">JD</div>
+                <div class="post-content">
+                    <h4>Tips for Maintaining Humidity for Tropical Plants</h4>
+                    <p>I've been struggling with keeping my calathea happy in my dry apartment...</p>
+                    <div class="post-meta">Posted by John Doe • 2 hours ago • 12 replies</div>
+                </div>
+            </div>
+            <div class="post-card">
+                <div class="post-avatar">SM</div>
+                <div class="post-content">
+                    <h4>Help! Yellow Leaves on My Monstera</h4>
+                    <p>My monstera's leaves are turning yellow and I'm not sure what's wrong...</p>
+                    <div class="post-meta">Posted by Sarah Miller • 5 hours ago • 8 replies</div>
+                </div>
+            </div>
+            <div class="post-card">
+                <div class="post-avatar">RK</div>
+                <div class="post-content">
+                    <h4>Success Story: My First Orchid Rebloomed!</h4>
+                    <p>After months of care, my orchid finally produced new flower spikes...</p>
+                    <div class="post-meta">Posted by Ray Kumar • 1 day ago • 24 replies</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="community-cta">
+            <h2>Ready to Join Our Community?</h2>
+            <p>Create an account to start sharing your plant journey with fellow enthusiasts.</p>
+            <a href="Community_chatbot.html" class="cta-button">Join Now</a>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <h3>🌿 BhumiSangh</h3>
+            </div>
+            <div class="footer-links">
+                <ul>
+                    <li><a href="About_us.html">About Us</a></li>
+                    <li><a href="Contact.html">Contact</a></li>
+                    <li><a href="Privacy_Policy.html">Privacy Policy</a></li>
+                    <li><a href="Terms_of_service.html">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div class="footer-social">
+                <a href="https://www.linkedin.com/in/ayan-pandey-b66067296?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+                    target="_blank"><img src="https://cdn-icons-png.flaticon.com/128/4494/4494497.png" alt="LinkedIn"
+                        width="30" height="30" />
+                </a></a>
+                <a href="https://github.com/ayanpandit" target="_blank"><img
+                        src="https://img.icons8.com/?size=100&id=12599&format=png&color=000000" alt="GitHub"
+                        width="30" height="30" /></a>
+                <a href="https://www.instagram.com/ayanpandit_31?igsh=NWkyMzFrYTkxbTN5" target="_blank">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/1200px-Instagram_logo_2022.svg.png"
+                        alt="Instagram" width="30" height="30" />
+                </a>
+
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 BhumiSangh. All Rights Reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

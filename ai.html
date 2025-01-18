@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Disease Detector</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-green-50">
+    <div id="root"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+
+    <script type="text/babel">
+    const { useState, useRef } = React;
+
+    // Mock disease database (can be expanded)
+    const PLANT_DISEASES = {
+        'tomato_early_blight': {
+            name: 'Early Blight',
+            description: 'A fungal disease causing dark spots on tomato leaves and stems.',
+            treatment: 'Remove infected leaves, apply fungicide, ensure good air circulation.',
+            severity: 'Moderate',
+            image: 'https://example.com/early_blight.jpg'
+        },
+        'potato_late_blight': {
+            name: 'Late Blight',
+            description: 'A serious potato disease causing rapid leaf decay and plant deterioration.',
+            treatment: 'Remove infected plants, use copper-based fungicides, practice crop rotation.',
+            severity: 'High',
+            image: 'https://example.com/late_blight.jpg'
+        },
+        'healthy': {
+            name: 'Healthy Plant',
+            description: 'No disease detected. The plant appears to be in good condition.',
+            treatment: 'Continue regular plant care and monitoring.',
+            severity: 'None',
+            image: 'https://example.com/healthy_plant.jpg'
+        }
+    };
+
+    const PlantDiseaseDetector = () => {
+        const [selectedImage, setSelectedImage] = useState(null);
+        const [detectedDisease, setDetectedDisease] = useState(null);
+        const [loading, setLoading] = useState(false);
+        const [error, setError] = useState(null);
+        const fileInputRef = useRef(null);
+        const videoRef = useRef(null);
+        const canvasRef = useRef(null);
+
+        const simulateDiseaseDetection = (imageFile) => {
+            setLoading(true);
+            
+            // Simulate network delay
+            setTimeout(() => {
+                // Randomly select a disease
+                const diseaseKeys = Object.keys(PLANT_DISEASES);
+                const randomDiseaseKey = diseaseKeys[Math.floor(Math.random() * diseaseKeys.length)];
+                const selectedDisease = PLANT_DISEASES[randomDiseaseKey];
+
+                setDetectedDisease({
+                    ...selectedDisease,
+                    confidence: Math.floor(Math.random() * 30) + 70 // 70-100% confidence
+                });
+                setLoading(false);
+            }, 1500);
+        };
+
+        const handleImageUpload = (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    setSelectedImage(reader.result);
+                    setError(null);
+                    simulateDiseaseDetection(file);
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        const handleCameraCapture = () => {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(stream => {
+                        videoRef.current.srcObject = stream;
+                        videoRef.current.play();
+                        
+                        // Show video capture interface
+                        setSelectedImage(null);
+                        setDetectedDisease(null);
+                    })
+                    .catch(err => {
+                        setError('Camera access denied. Please check permissions.');
+                    });
+            } else {
+                setError('Camera not supported on this device.');
+            }
+        };
+
+        const captureImage = () => {
+            const video = videoRef.current;
+            const canvas = canvasRef.current;
+            const context = canvas.getContext('2d');
+
+            // Set canvas dimensions to match video
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            // Draw current video frame
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Convert to data URL
+            const imageDataUrl = canvas.toDataURL('image/png');
+            setSelectedImage(imageDataUrl);
+
+            // Stop video stream
+            const stream = video.srcObject;
+            const tracks = stream.getTracks();
+            tracks.forEach(track => track.stop());
+
+            // Simulate disease detection
+            simulateDiseaseDetection();
+        };
+
+        const resetDetection = () => {
+            setSelectedImage(null);
+            setDetectedDisease(null);
+            setError(null);
+        };
+
+        return (
+            <div className="container mx-auto px-4 py-8 max-w-xl">
+                <div className="bg-white shadow-lg rounded-2xl p-6 text-center">
+                    <h1 className="text-4xl font-bold text-green-700 mb-4">
+                        🌿 Plant Disease Detector
+                    </h1>
+                    <p className="text-gray-600 mb-6">
+                        Upload a plant leaf image or use camera to detect diseases
+                    </p>
+
+                    {/* Error Display */}
+                    {error && (
+                        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+                            {error}
+                        </div>
+                    )}
+
+                    {/* Image Upload/Camera Section */}
+                    {!selectedImage && !videoRef.current ? (
+                        <div className="flex flex-col space-y-4">
+                            {/* Hidden file input */}
+                            <input 
+                                type="file" 
+                                accept="image/*" 
+                                onChange={handleImageUpload}
+                                ref={fileInputRef}
+                                className="hidden"
+                            />
+                            
+                            {/* Upload Button */}
+                            <button 
+                                onClick={() => fileInputRef.current.click()}
+                                className="bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition flex items-center justify-center"
+                            >
+                                <i className="fas fa-upload mr-2"></i>
+                                Upload Plant Leaf Image
+                            </button>
+
+                            {/* Camera Button */}
+                            <button 
+                                onClick={handleCameraCapture}
+                                className="bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition flex items-center justify-center"
+                            >
+                                <i className="fas fa-camera mr-2"></i>
+                                Use Camera
+                            </button>
+                        </div>
+                    ) : null}
+
+                    {/* Camera Capture Interface */}
+                    {!selectedImage && videoRef.current && (
+                        <div>
+                            <video 
+                                ref={videoRef} 
+                                className="mx-auto mb-4 max-h-64 rounded-lg shadow-md"
+                                style={{maxWidth: '100%'}}
+                            ></video>
+                            <canvas 
+                                ref={canvasRef} 
+                                className="hidden"
+                            ></canvas>
+                            <div className="flex justify-center space-x-4">
+                                <button 
+                                    onClick={captureImage}
+                                    className="bg-green-500 text-white px-4 py-2 rounded-lg"
+                                >
+                                    Capture Image
+                                </button>
+                                <button 
+                                    onClick={resetDetection}
+                                    className="bg-red-500 text-white px-4 py-2 rounded-lg"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Image Preview and Disease Detection */}
+                    {selectedImage && (
+                        <div>
+                            <img 
+                                src={selectedImage} 
+                                alt="Uploaded Plant Leaf" 
+                                className="mx-auto mb-4 max-h-64 rounded-lg shadow-md"
+                            />
+
+                            {/* Loading Spinner */}
+                            {loading ? (
+                                <div className="flex justify-center items-center">
+                                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-green-500"></div>
+                                </div>
+                            ) : detectedDisease ? (
+                                <div className="bg-green-50 p-4 rounded-lg">
+                                    <h2 className="text-2xl font-bold text-green-800 mb-2">
+                                        {detectedDisease.name}
+                                    </h2>
+                                    <p className="text-gray-700 mb-2">
+                                        {detectedDisease.description}
+                                    </p>
+
+                                    <div className="flex justify-between items-center mt-4">
+                                        <span className="font-semibold text-blue-600">
+                                            Confidence: {detectedDisease.confidence}%
+                                        </span>
+                                        <span className={`font-semibold ${
+                                            detectedDisease.severity === 'High' ? 'text-red-600' :
+                                            detectedDisease.severity === 'Moderate' ? 'text-yellow-600' :
+                                            'text-green-600'
+                                        }`}>
+                                            Severity: {detectedDisease.severity}
+                                        </span>
+                                    </div>
+
+                                    <div className="mt-4">
+                                        <h3 className="font-bold text-green-900 mb-2">Treatment:</h3>
+                                        <p className="text-gray-700">
+                                            {detectedDisease.treatment}
+                                        </p>
+                                    </div>
+
+                                    <div className="flex justify-center mt-4 space-x-4">
+                                        <button 
+                                            onClick={resetDetection}
+                                            className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300"
+                                        >
+                                            Reset
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : null}
+                        </div>
+                    )}
+                </div>
+
+                {/* Footer */}
+                <footer className="text-center mt-4 text-gray-500">
+                    © 2024 Plant Disease Detector - Detect & Protect Your Plants
+                </footer>
+            </div>
+        );
+    };
+
+    ReactDOM.render(<PlantDiseaseDetector />, document.getElementById('root'));
+    </script>
+</body>
+</html>
